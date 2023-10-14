@@ -42,11 +42,16 @@ dM = Ef - Ei - e * ( sinEf - sinEi ) ;
 
 if thf >= thi
     dt = dM / n ; 
+
+    % condition to compensate for atan range -180 180
     if thf - thi > 180 
-        dt = dt + 2 * pi / n ;
+        dt = dt + floor ( ( ( thf - thi - 180 ) / 360 ) + 1 ) * 2 * pi / n ;
     end
 else 
-    dt = dM / n + 2 * pi / n ;
+    dt =  abs ( dM / n ) + 2 * pi / n ;
+    if thi - thf > 180 
+        dt = dt + floor ( ( ( thf - thi - 180 ) / 360 ) + 2 ) * 2 * pi / n ;
+    end
 end
 
 end
