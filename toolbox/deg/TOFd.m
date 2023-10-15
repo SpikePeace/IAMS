@@ -7,14 +7,15 @@ function [ dt ] = TOFd( a , e , thi , thf , mu )
 %
 % DESCRIPTION:
 % Calculates flight time to move between two positions on the same orbit
-% give the angles thi and thf in degrees.
+% give the angles thi and thf in degrees. Only first 2 inputs needed to get revolution
+% period.
 % 
 %
 % INPUT:
 % a [1x1] Semi-major axis [km]
 % e [1x1] Eccentricity [-]
-% thi [1x1] True initial anomaly [deg]
-% thf [1x1] True final anomaly [deg]
+% thi [1x1] Initial true anomaly [deg]
+% thf [1x1] Final true anomaly [deg]
 %
 % OUTPUT:
 %
@@ -23,8 +24,14 @@ function [ dt ] = TOFd( a , e , thi , thf , mu )
 %
 if nargin == 4
     mu = 398600.433 ;
+end 
 
 n = sqrt ( mu / a ^ 3 ) ;
+
+% Calculate period when given only a and e 
+if nargin == 2 
+    dt = 2 * pi / n ;
+end
 
 % Eccentric anomaly sine
 sinEi = ( sqrt( 1 - e ^ 2 ) *  sind ( thi ) ) / ( 1 + e * cosd ( thi ) ) ;
@@ -43,14 +50,14 @@ dM = Ef - Ei - e * ( sinEf - sinEi ) ;
 if thf >= thi
     dt = dM / n ; 
 
-    % condition to compensate for atan range -180 180
+    % condition to compensate for atan range -90 90
     if thf - thi > 180 
         dt = dt + floor ( ( ( thf - thi - 180 ) / 360 ) + 1 ) * 2 * pi / n ;
     end
 else 
-    dt =  abs ( dM / n ) + 2 * pi / n ;
+    dt = - dM / n   + 2 * pi / n ;
     if thi - thf > 180 
-        dt = dt + floor ( ( ( thf - thi - 180 ) / 360 ) + 2 ) * 2 * pi / n ;
+        dt = dt  + floor ( ( ( thi - thf - 180 ) / 360 ) + 1 ) * 2 * pi / n ;
     end
 end
 
