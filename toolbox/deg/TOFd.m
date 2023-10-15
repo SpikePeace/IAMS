@@ -51,11 +51,15 @@ if thf >= thi
     dt = dM / n ; 
 
     % condition to compensate for atan range -90 90
+
     if thf - thi > 180 
         dt = dt + floor ( ( ( thf - thi - 180 ) / 360 ) + 1 ) * 2 * pi / n ;
     end
 else 
     dt = - dM / n   + 2 * pi / n ;
+
+    % condition to compensate for atan range -90 90
+
     if thi - thf > 180 
         dt = dt  + floor ( ( ( thi - thf - 180 ) / 360 ) + 1 ) * 2 * pi / n ;
     end
