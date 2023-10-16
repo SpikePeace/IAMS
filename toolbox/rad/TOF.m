@@ -29,7 +29,7 @@ end
 n = sqrt ( mu / a ^ 3 ) ;
 
 % Calculate period when given only a and e 
-if nargin == 2 
+if nargin == 1 
     dt = 2 * pi / n ;
 end
 
