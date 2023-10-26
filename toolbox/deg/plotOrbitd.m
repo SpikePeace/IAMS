@@ -1,9 +1,9 @@
-function [X Y Z] = plotOrbit(kepEl, mu, deltaTh, stepTh)
+function [X Y Z] = plotOrbitd(orbit, thi, deltaTh, stepTh, mu)
 % plotOrbit.m - Plot the arc length deltaTh of the orbit described by
 % kepEl.
 %
 % PROTOTYPE:
-% plotOrbit(kepEl, mu, deltaTh, stepTh)
+% plotOrbit(orbit, thi, deltaTh, stepTh, mu)
 %
 % DESCRIPTION:
 % Plot the arc length of the orbit described by a set of orbital
@@ -19,14 +19,19 @@ function [X Y Z] = plotOrbit(kepEl, mu, deltaTh, stepTh)
 % X [1xn] X position [km]
 % Y [1xn] Y position [km]
 % Z [1xn] Z position [km]
-Th=kepEl(6):stepTh:kepEl(6)+deltaTh;
+
+if nargin == 4
+    mu = 398600.433;
+end
+
+Th=thi:stepTh:thi+deltaTh;
 for i=1:length(Th)
-    r=kep2cartd(kepEl(1),kepEl(2),kepEl(3),kepEl(4),kepEl(5),Th(i),mu);
+    r=kep2cartd(orbit ,Th(i) ,mu);
     X(i)=r(1);
     Y(i)=r(2);
     Z(i)=r(3);
 end
-
+plot3(X,Y,Z)
 end
     
 

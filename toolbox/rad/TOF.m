@@ -1,4 +1,4 @@
-function [ dt ] = TOF( a , e , thi , thf , mu ) 
+function [ dt ] = TOF( orbit, thi , thf , mu ) 
 % TOF.m - Flight time to move between two positions on the same
 % orbit
 %
@@ -22,9 +22,12 @@ function [ dt ] = TOF( a , e , thi , thf , mu )
 % dt [1x1] Flight time [s]
 %
 %
-if nargin == 4
+if nargin == 3
     mu = 398600.433 ;
 end 
+
+a=orbit.a;
+e=orbit.e;
 
 n = sqrt ( mu / a ^ 3 ) ;
 

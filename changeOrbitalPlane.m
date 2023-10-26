@@ -1,29 +1,41 @@
-function [DeltaV, om_f, theta] = changeOrbitalPlane(a, e, inc_i, OM_i, om_i, inc_f, OM_f, type, mi)
+function [DeltaV, orbit_out, theta] = changeOrbitalPlane(orbit_in_i,orbit_in_f, type, mi)
 % 
 % Change of Plane maneuver
 % 
-% [DeltaV, om_f, theta] = changeOrbitalPlane(a, e, inc_i, OM_i, om_i, inc_f, OM_f, mi)
+% [DeltaV, orbit_out, dt] = changeOrbitalPlane(a, e, inc_i, OM_i, om_i, inc_f, OM_f, mi)
 % 
 % Input arguments:
-% a         semi-major axis             [km]
-% e         eccentricity                [-]
-% inc_i     initial inclination         [rad]
-% OM_i      initial RAAN                [rad]
-% om_i      initial pericenter anomaly  [rad]
-% inc_f     final inclination           [rad]
-% OM_f      final RAAN                  [rad]
+% 
+% orbit_in_i [1x1] Initial orbit
+% orbit_in_f [1x] Final orbit
+%   
+%   
+% 
+% 
 % type      "n" per calcolo normale, "o" per minimizzare DeltaV
 % (mi)      gravitational parameter     [km^3/s^2]
 
 % Output arguments:
 % DeltaV    maneuver impulse            [km/s]
-% om_f      final pericenter anomaly    [rad]
+% orbit_out      final orbit            [rad]
 % theta     true anomaly at maneuver    [rad]
 %           (è già il theta in cui la manovra costa meno)
+% dt        
 
-if nargin == 8
+if nargin == 3
     mi = 398600;
 end
+
+a=orbit_in_i.a;
+e=orbit_in_i.e;
+inc_i=orbit_in_i.inc;
+OM_i=orbit_in_i.OM;
+om_i=orbit_in_i.om;
+inc_f=orbit_in_f.inc;
+OM_f=orbit_in_f.OM;
+
+
+
 
 dOM = OM_f - OM_i;
 dinc = inc_f - inc_i;
@@ -105,3 +117,11 @@ end
 p = a * (1 - e^2);
 v_theta = sqrt(mi/p) * (1 + e*cos(theta));
 DeltaV = 2 * v_theta * sin(alpha/2);
+
+orbit_out.a=a;
+orbit_out.e=e;
+orbit_out.om=om_f;
+orbit_out.inc=inc_f;
+orbit_out.OM=OM_f;
+
+

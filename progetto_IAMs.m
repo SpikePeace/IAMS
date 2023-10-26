@@ -1,108 +1,45 @@
-
-
-r=[10000;20000;10000];
-v=[-2.5;-2.5;3];
 mu=398600.433;
-[a, e, i, OM, om, th] = car2kep(r, v, mu)
-
-kep=[a; e; i; OM; om; th]
-% Call the Terra_3D Function
-Terra3d;
-% Call the plotOrbit function
-[X,Y,Z] = plotOrbit(kep,mu,2*pi,deg2rad(0.1));
-% Plot the 3D satellite orbit
-Thf=kepEl(6):stepTh:kepEl(6)+deltaTh;
-for i=1:length(Thf)
-    r=kep2car(kepEl(1),kepEl(2),kepEl(3),kepEl(4),kepEl(5),Thf(i),mu);
-    X(i)=r(1);
-    Y(i)=r(2);
-    Z(i)=r(3);
-end
-plot3(X,Y,Z);
-Terra3d;
-% Define an indefinite plot
-h = plot3(nan,nan,nan,'or');
-% Define the moving point
-for i= 1:10:length(X)
-set(h,'XData',X(i),'YData',Y(i),'ZData',Z(i));
-drawnow
-end
-
-
-
 
 %%%%%%%
-
-mu=398600.433;
-
-%Punto iniziale
+PlotEarth
+clear all
+%% Punto iniziale
 ri=[-7894.6436; -854.6173; 2641.2167];
 vi=[-0.3252; -6.7530; -1.1450];
 
-[ai, ei, ii, OMi, omi, thi] = car2kep(ri, vi, mu);
-kepi=[ai; ei; ii; OMi; omi; thi];
-[Xi,Yi,Zi] = plotOrbit(kepi,mu,2*pi,deg2rad(1));
-%
+[orbit_i , th_i] = cart2kep(ri, vi);
+plotOrbit(orbit_i,th_i,2*pi,deg2rad(1));
 hold on
-Thf=kepi(6):deg2rad(1):kepi(6)+2*pi;
-for i=1:length(Thf)
-    r=kep2car(kepi(1),kepi(2),kepi(3),kepi(4),kepi(5),Thf(i),mu);
-    Xi(i)=r(1);
-    Yi(i)=r(2);
-    Zi(i)=r(3);
-end
-plot3(Xi,Yi,Zi,':or','LineWidth',1,'MarkerIndices',1);
-%
 
-hold on
-grid on
-
-%Punto finale
+%% Punto finale
 af=13490.0000;
 ef=0.3593;
 iF=0.7717;
 OMf=0.8843;
 omf=1.7230;
-thf=2.0450;
+th_f=2.0450;
 
-kepf=[af; ef; iF; OMf; omf; thf];
-%
-hold on
-Thf=kepf(6):deg2rad(1):kepf(6)+2*pi;
-for i=1:length(Thf)
-    r=kep2car(kepf(1),kepf(2),kepf(3),kepf(4),kepf(5),Thf(i),mu);
-    Xf(i)=r(1);
-    Yf(i)=r(2);
-    Zf(i)=r(3);
-end
-plot3(Xf,Yf,Zf,':ok','LineWidth',1,'MarkerIndices',1);
-%
-[Xf,Yf,Zf] = plotOrbit(kepf,mu,2*pi,deg2rad(1));
+orbit_f = orbit(af,ef,iF,OMf,omf);
 
+plotOrbit(orbit_f,th_f,2*pi,deg2rad(1));
+
+
+
+%%
 %%
 %% manovra standard 
 
     %1) cambio piano
-    [Dv1,om1,th1,dt1] = changeOrbitalPlane(ai,ei,ii,OMi,omi,iF,OMf,'o',thi); %ricontrollare
-    kep1=[ai; ei; iF; OMf; om1; th1];
-    figure
-    [X1,Y1,Z1] = plotOrbit(kep1,mu,2*pi,deg2rad(1));
+    [Dv1,orbit_1, th_1] = changeOrbitalPlane(orbit_i,orbit_f,'o'); %ricontrollare   
     
-    hold on
-    Thf=kepi(6):deg2rad(1):kep1(6);
-    for i=1:length(Thf)
-        r=kep2car(kepi(1),kepi(2),kepi(3),kepi(4),kepi(5),Thf(i),mu);
-        Xi1(i)=r(1);
-        Yi1(i)=r(2);
-        Zi1(i)=r(3);
-    end
-    plot3(Xi1,Yi1,Zi1,'-go','LineWidth',1,'MarkerIndices',length(Thf)); %plotta lo spostamento dal punto iniziale al primo punto di manovra
-    %
+    dt1 = TOF(orbit_i, th_i , th_1);
 
+    plotOrbit(orbit_i,th_i,th_1-th_i,deg2rad(1));
+    
+    
     %2) omega piccolo
     dom=omf-om1;
-    [dv2,tha,th2] = changePeriapsisArg(ai,ei,om1,omf,th1);
-    th2
+    [dv2,tha,th2] = changePericenterArg(ai,ei,om1,omf,th1);
     kep2=[ai; ei; iF; OMf; omf; th2(1,2)];
     figure
     [X2,Y2,Z2] = plotOrbit(kep2,mu,2*pi,deg2rad(1));

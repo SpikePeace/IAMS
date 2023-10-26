@@ -1,16 +1,16 @@
-function [a, e_norm, i, OM, om, th] = cart2kep(r, v, mu)
+function [orbit , th] = cart2kep(r, v, mu)
 % cart2kep.m - Conversion from Cartesian coordinates to Keplerian elements
 %
 % PROTOTYPE:
-% [a, e, i, OM, om, th] = car2kep(r, v, mu)
+% [orbit , th] = car2kep(r, v, mu)
 %
 % DESCRIPTION:
 % Conversion from Cartesian coordinates to Keplerian elements. Angles in
-% degrees.
+% radians.
 %
 % INPUT:
-% r [3x1] Position vector [km]
-% v [3x1] Velocity vector [km/s]
+% orbit [1x1] orbit struct
+% 
 % mu [1x1] Gravitational parameter [km^3/s^2]
 %
 % OUTPUT:
@@ -20,6 +20,13 @@ function [a, e_norm, i, OM, om, th] = cart2kep(r, v, mu)
 % RAAN [1x1] RAAN [deg]
 % om [1x1] Pericentre anomaly [deg]
 % th [1x1] True anomaly [deg]
+
+if nargin == 2
+    mu = 398600.433;
+end
+
+
+
 
 % r and v norm
 r_norm=norm(r);
@@ -57,6 +64,12 @@ if V_r>=0
     th=acos(dot(e,r)/(e_norm*r_norm));
 else
     th=2*pi-acos(dot(e,r)/(e_norm*r_norm));
+end
+orbit.e = e_norm;
+orbit.a = a;
+orbit.OM = OM;
+orbit.om = om;
+orbit.inc = i;
 end
 
 
