@@ -34,17 +34,18 @@ n = sqrt ( mu / a ^ 3 ) ;
 % Calculate period when given only a and e 
 if nargin == 1 
     dt = 2 * pi / n ;
+    return
 end
 
 % Eccentric anomaly sine
 sinEi = ( sqrt( 1 - e ^ 2 ) * sin ( thi ) ) / ( 1 + e * cos ( thi )) ;
 sinEf = ( sqrt( 1 - e ^ 2 ) * sin ( thf ) ) / ( 1 + e * cos ( thf )) ;
-half_tanEi = sqrt ( ( 1 - e ) / ( 1 + e ) ) * tan ( thi / 2 ) ;
-half_tanEf = sqrt ( ( 1 - e ) / ( 1 + e ) ) * tan ( thf / 2 ) ;
+cosEi = ( e + cos(thi)) / (1 + e * cos(thi));
+cosEf = ( e + cos(thf)) / (1 + e * cos(thf));
 
 % Eccentric anomaly
-Ei = 2 * atan ( half_tanEi ) ;
-Ef = 2 * atan ( half_tanEf ) ;
+Ei = atan2 ( sinEi, cosEi) ;
+Ef = atan2 ( sinEf, cosEf) ;
 
 % Kepler equation
 dM = Ef - Ei - e * ( sinEf - sinEi ) ;
@@ -54,16 +55,16 @@ if thf >= thi
 
     % condition to compensate for atan range -90 90
     
-    if thf - thi > pi 
-        dt = dt + floor ( ( ( thf - thi - pi ) / ( 2 * pi ) ) + 1 ) * 2 * pi / n ;
+    if thf > pi 
+        dt = dt + floor ( ( ( thf - pi ) / ( 2 * pi ) ) + 1 ) * 2 * pi / n ;
     end
 else 
     dt = - dM / n   + 2 * pi / n ;
 
     % condition to compensate for atan range -90 90
 
-    if thi - thf > pi 
-        dt = dt  + floor ( ( ( thi - thf - pi ) / ( 2 * pi ) ) + 1 ) * 2 * pi / n ;
+    if thi > pi 
+        dt = dt  + floor ( ( ( thi - pi ) / ( 2 * pi ) ) + 1 ) * 2 * pi / n ;
     end
 end
 
