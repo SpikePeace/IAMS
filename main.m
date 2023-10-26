@@ -30,7 +30,8 @@ plotOrbit(orbit_f,th_f,2*pi,deg2rad(1));
 %% manovra standard 
 
     %1) cambio piano
-    [Dv1,orbit_1, th_1] = changeOrbitalPlane(orbit_i,orbit_f,'o'); %ricontrollare   
+
+    [dv1,orbit_1, th_1] = changeOrbitalPlane(orbit_i,orbit_f,'o'); %ricontrollare   
     
     dt1 = TOF(orbit_i, th_i , th_1);
 
@@ -38,84 +39,43 @@ plotOrbit(orbit_f,th_f,2*pi,deg2rad(1));
     
     
     %2) omega piccolo
-    dom=omf-om1;
-    [dv2,tha,th2] = changePericenterArg(ai,ei,om1,omf,th1);
-    kep2=[ai; ei; iF; OMf; omf; th2(1,2)];
-    figure
-    [X2,Y2,Z2] = plotOrbit(kep2,mu,2*pi,deg2rad(1));
-    %
-    hold on
-    Thf=kep1(6):deg2rad(1):(kep2(6)+dom);
-    for i=1:length(Thf)
-        r=kep2car(kep1(1),kep1(2),kep1(3),kep1(4),kep1(5),Thf(i),mu);
-        X12(i)=r(1);
-        Y12(i)=r(2);
-        Z12(i)=r(3);
-    end
-    plot3(X12,Y12,Z12,'-bo','LineWidth',1,'MarkerIndices',length(Thf)); %plotta lo spostamento dal punto 1 al punto 2
-    %
+
+    [dv2, orbit_2, th_21, th_22] = changePericenterArg(orbit_1,orbit_f);
     
+        % scelta theta
+         th_21 = th_21(2);
+         th_22 = th_22(2);
+    
+    dt2 = TOF(orbit_1,th_1,th_21);
+
+    plotOrbit(orbit_1, th_1, th_21-th_1,deg2rad(0.5));
+
     %2.b) arrivo a apogeo sull'orbita 2
-    Thf=kep2(6):deg2rad(1):(pi);
-    for i=1:length(Thf)
-        r=kep2car(kep2(1),kep2(2),kep2(3),kep2(4),kep2(5),Thf(i),mu);
-        X2p(i)=r(1);
-        Y2p(i)=r(2);
-        Z2p(i)=r(3);
-    end
-    plot3(X2p,Y2p,Z2p,'-mo','LineWidth',1,'MarkerIndices',length(Thf));
-    [dt2p] = timeOfFlight(ai,ei,mu,kep2(6),pi);
+    
+    plotOrbit(orbit_2, th_22, pi-th_22, deg2rad(0.5));
+
+    dt2p = TOF(orbit_2, th_22, pi);
     
     %3)manovra bitangente apogeo (orbita 2) - perigeo (orbita finale)
 
-    orbit2.a=kep2(1);
-    orbit2.e=kep2(2);
-    orbit2.inc=kep2(3);
-    orbit2.OM=kep2(4);
-    orbit2.om=kep2(5);
-    orbit2.rp=orbit2.a*(1-orbit2.e);
-    orbit2.ra=orbit2.a*(1+orbit2.e);
+    [dv3_1,dv3_2,dt3,orbit_t] = bitangentTransfer(orbit_2,orbit_f,'ap');
 
-    orbitf.a=kepf(1);
-    orbitf.e=kepf(2);
-    orbitf.inc=kepf(3);
-    orbitf.OM=kepf(4);
-    orbitf.om=kepf(5);
-    orbitf.rp=orbitf.a*(1-orbitf.e);
-    orbitf.ra=orbitf.a*(1+orbitf.e);
+    plotOrbit(orbit_t,pi,pi,deg2rad(0.5));
 
-
-
-    [dv1,dv2,dt,orbitt] = bitangentTransfer(orbit2,orbitf,'ap');
-    kept=[orbitt.a;orbitt.e;orbitt.inc;orbitt.OM;orbitt.om;0];
-    %
-    hold on
-    Thf=pi:deg2rad(1):2*pi;
-    for i=1:length(Thf)
-        r=kep2car(kept(1),kept(2),kept(3),kept(4),kept(5),Thf(i),mu);
-        Xt(i)=r(1);
-        Yt(i)=r(2);
-        Zt(i)=r(3);
-    end
-    plot3(Xt,Yt,Zt,'-oc','LineWidth',1,'MarkerIndices',length(Thf));
-    figure
-    Terra3d;
-    [Xt,Yt,Zt] = plotOrbit(kept,mu,pi,deg2rad(1));
     %3.b) arrivo a punto finale
-    [dtpf] = timeOfFlight(af,ef,mu,0,kepf(6));
-
-    Thf=0:deg2rad(1):thf;
-    for i=1:length(Thf)
-        r=kep2car(kepf(1),kepf(2),kepf(3),kepf(4),kepf(5),Thf(i),mu);
-        Xf(i)=r(1);
-        Yf(i)=r(2);
-        Zf(i)=r(3);
-    end
-    plot3(Xf,Yf,Zf,'-k','LineWidth',1);
     
-    hold on
-    PlotEarth
+    dt3p = TOF(orbit_f,0,th_f);
 
+    plotOrbit(orbit_f,0,th_f,deg2rad(0.5));
+
+    % Calcoli finali
+
+    dv_tot = dv1 + dv2 + dv3_1 + dv3_2 ;
+    dt_tot = dt1 + dt2 + dt2p + dt3 + dt3p;
+
+
+    disp("DeltaV = " + dv_tot)
+    disp("DeltaT = " + dt_tot)
 %%
 %% Cambio di piano lontano dall'orbita
 %%(valutare se è meglio apogeo-perigeo o perigeo-apogeo

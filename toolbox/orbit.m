@@ -1,4 +1,4 @@
-function [orbit] = orbit(a,e,inc,OM,om)
+function [orbit,th] = orbit(a,e,inc,OM,om,th)
     orbit.a=a;
     orbit.e=e;
     orbit.inc=inc;

@@ -1,4 +1,4 @@
-function [X Y Z] = plotOrbit(orbit, th_i, deltaTh, stepTh, fpr,atmu)
+function [X Y Z] = plotOrbit(orbit, th_i, deltaTh, stepTh)
 % plotOrbit.m - Plot the arc length deltaTh of the orbit described by
 % kepEl.
 %

@@ -31,6 +31,11 @@ if (abs(orbit_i.om - orbit_f.om) > eps * 10^6) && (abs(orbit_i.om - orbit_f.om) 
     error("Orbite con argomenti del pericentro non compatibili");
 end
 
+orbit_i.rp=orbit_i.a*(1-orbit_i.e);
+orbit_i.ra=orbit_i.a*(1+orbit_i.e);
+orbit_f.rp=orbit_f.a*(1-orbit_f.e);
+orbit_f.ra=orbit_f.a*(1+orbit_f.e);
+
 switch type
     case "pa" % 1)
         % Pericentro - Apocentro:
