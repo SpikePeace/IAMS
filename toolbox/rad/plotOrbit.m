@@ -34,7 +34,7 @@ for i=1:length(Th)
     Y(i)=r(2);
     Z(i)=r(3);
 end
-plot3(X,Y,Z,linestyle)
+plot3(X,Y,Z,linestyle,'MarkerIndices',1)
 end
     
 

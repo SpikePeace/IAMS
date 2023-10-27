@@ -8,7 +8,7 @@ ri=[-7894.6436; -854.6173; 2641.2167];
 vi=[-0.3252; -6.7530; -1.1450];
 
 [orbit_i , th_i] = cart2kep(ri, vi);
-plotOrbit(orbit_i,th_i,2*pi,deg2rad(1),'--');
+plotOrbit(orbit_i,th_i,2*pi,deg2rad(1),'o--');
 hold on
 
 %% Punto finale
@@ -21,7 +21,10 @@ th_f=2.0450;
 
 orbit_f = orbit(af,ef,iF,OMf,omf);
 
-plotOrbit(orbit_f,th_f,2*pi,deg2rad(1),'--');
+[rf vf] = kep2cart(orbit_f,th_f);
+
+
+plotOrbit(orbit_f,th_f,2*pi,deg2rad(1),'o--');
 
 
 
@@ -208,7 +211,25 @@ plotOrbit(orbit_f,th_f,2*pi,deg2rad(1),'--');
     disp("DeltaV = " + dv_tot)
     disp("DeltaT = " + dt_tot)
 
-%% 
+%% Trasferimento diretto
+
+% Trovo piano contenente r_i , r_f , centro terra
+
+% Direzione piano
+
+orbit_plane_norm = cross (ri , rf) / norm ( cross( ri , rf ) );
+
+NA = cross ( [0 0 1] , orbit_plane_norm ) / norm (cross ( [0 0 1] , orbit_plane_norm )) ;
+ 
+OM = acos ( ascending_node(1) ) ;
+
+i = acos ( orbit_plane_norm(3) ) ;
+
+% Trovo th orbita iniziale e finale nel piano orbitale, rispetto all'asse
+% dei nodi
+
+th_i_AN = acos ( dot ( NA , ri ) / ( norm ( NA ) * norm ( ri ) ) ) ;
+th_f_AN = acos ( dot ( NA , rf ) / ( norm ( NA ) * norm ( rf ) ) ) ;
 
 
 

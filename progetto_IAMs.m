@@ -390,8 +390,8 @@ plot3(Xf,Yf,Zf,':ok','LineWidth',1,'MarkerIndices',1);
     end
     plot3(X12,Y12,Z12,'-go','LineWidth',1,'MarkerIndices',length(Thf));
 
-    
-%%%%%
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
+%% a 
 
 af=13490.0000;
 ef=0.3593;
@@ -469,8 +469,8 @@ dvtot=[dvtot(1,1:1:30)]
 
 %orbita buona: om=5
 
-thprovvi=thi-5;
-    thprovvf=thf-5;
+thprovvi=thi-1.7;
+    thprovvf=thf-1.7;
 
     A=[ 1 -norm(ri)*cos(thprovvi); 1 -norm(rf)*cos(thprovvf)];
     b=[norm(ri);norm(rf)];
@@ -482,13 +482,24 @@ thprovvi=thi-5;
 
     as=p/(1-es^2);
 
-orbits5=orbit(as,es,is,OMs,5)
+orbits5=orbit(as,es,is,OMs,1.7)
 thprovv5=thi-5;
 
 
 [X5 Y5 Z5] = plotOrbit(orbits5, 0, 2*pi, deg2rad(0.1))
 hold on
+[n1,vs1]=kep2cart(orbits5,thprovvi);
+[n2,vs2]=kep2cart(orbits5,thprovvf);
 
+vs1=vs1.*1000;
+vi=vi.*1000;
+vs2=vs2.*1000;
+vf=vf.*1000;
+
+quiver3(n1(1),n1(2),n1(3),vi(1),vi(2),vi(3))
+quiver3(n1(1),n1(2),n1(3),vs1(1),vs1(2),vs1(3))
+quiver3(n2(1),n2(2),n2(3),vs2(1),vs2(2),vs2(3))
+quiver3(n2(1),n2(2),n2(3),vf(1),vf(2),vf(3))
 %orbita di merda: om=3
 
 
