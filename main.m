@@ -120,7 +120,7 @@ plotOrbit(orbit_f,th_f,2*pi,deg2rad(1),'--');
         th_31 = th_31(2);
         th_32 = th_32(2);
 
-    dt3 = TOF (orbit_2, th_2, th_31) ;
+    dt3 = TOF (orbit_2, th_31, 2*pi) ;
 
     plotOrbit (orbit_2, th_2, th_31-th_2, deg2rad(0.5)) ;
 
@@ -142,6 +142,16 @@ plotOrbit(orbit_f,th_f,2*pi,deg2rad(1),'--');
 
 
 
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+
+
 %B) perigeo-apogeo
     %1)portare al perigeo
     
@@ -149,7 +159,7 @@ plotOrbit(orbit_f,th_f,2*pi,deg2rad(1),'--');
     plotOrbit(orbit_i, th_i, 2*pi-th_i , deg2rad(0.5));
 
     %2) Manovra bitangente tra orbita iniziale e orbita finale nel piano
-    %dell'orbita iniziale    
+    % dell'orbita iniziale    
     
     orbit_1 = orbit_i;
     orbit_1.a = orbit_f.a;
@@ -178,7 +188,7 @@ plotOrbit(orbit_f,th_f,2*pi,deg2rad(1),'--');
         th_31 = th_31(1);
         th_32 = th_32(1);
 
-    dt3 = TOF (orbit_2, th_2, th_31) ;
+    dt3 = TOF (orbit_2, th_2, 2*pi+th_31);
 
     plotOrbit (orbit_2, th_2, 2*pi+th_31-th_2, deg2rad(0.5)) ;
 
@@ -198,8 +208,7 @@ plotOrbit(orbit_f,th_f,2*pi,deg2rad(1),'--');
     disp("DeltaV = " + dv_tot)
     disp("DeltaT = " + dt_tot)
 
-
-
+%% 
 
 
 

@@ -22,7 +22,7 @@ function [ dt ] = TOFd( orbit , thi , thf , mu )
 % dt [1x1] Flight time [s]
 %
 %
-if nargin == 1
+if nargin <= 3
     mu = 398600.433 ;
 end 
 
@@ -56,7 +56,7 @@ if thf >= thi
 
     % condition to compensate for atan range -90 90
 
-    if thf > 180 
+    if thf > 180 && thf < 360
         dt = dt + floor ( ( ( thf - 180 ) / 360 ) + 1 ) * 2 * pi / n ;
     end
 else 
