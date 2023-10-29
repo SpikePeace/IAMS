@@ -393,6 +393,7 @@ plot3(Xf,Yf,Zf,':ok','LineWidth',1,'MarkerIndices',1);
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
 %% a 
 
+
 af=13490.0000;
 ef=0.3593;
 iF=0.7717;
@@ -401,27 +402,27 @@ omf=1.7230;
 thf=2.0450;
 
 orbitf=orbit(  af,ef,iF,OMf,omf,thf);
-[rf, vf] = kep2cart(orbitf,thf)
+[rf, vf] = kep2cart(orbitf,thf);
 
 h=cross(ri,rf);
 h=h./norm(h)
 pe=[0;0;1];
 lu=[1;0;0];
 
-is=acos(dot(h,pe)/(norm(h)*norm(pe))) %i del piano della secante
+is=acos(dot(h,pe)/(norm(h)*norm(pe))); %i del piano della secante
 
 NA=cross(pe,h);
 NA=NA./norm(NA);
 
-OMs=acos(dot(NA,lu)/(norm(NA)*norm(lu))) %OM del piano della secante
+OMs=acos(dot(NA,lu)/(norm(NA)*norm(lu))); %OM del piano della secante
 
-plot3([0;ri(1)],[0;ri(2)],[0;ri(3)],'-ko','LineWidth',3,'MarkerIndices',2)
-plot3([0;rf(1)],[0;rf(2)],[0;rf(3)],'-ro','LineWidth',3,'MarkerIndices',2)
-plot3([0;h(1)],[0;h(2)],[0;h(3)],'-co','LineWidth',3,'MarkerIndices',2)
-plot3([0;pe(1)],[0;pe(2)],[0;pe(3)],'-bo','LineWidth',3,'MarkerIndices',2)
-plot3([0;NA(1)],[0;NA(2)],[0;NA(3)],'-mo','LineWidth',3,'MarkerIndices',2)
-plot3([0;1],[0;0],[0;0],'-o','LineWidth',3,'MarkerIndices',2)
-plot3([0;NAC],[0;0],[0;0],'-o','LineWidth',3,'MarkerIndices',2)
+%plot3([0;ri(1)],[0;ri(2)],[0;ri(3)],'-ko','LineWidth',3,'MarkerIndices',2)
+%plot3([0;rf(1)],[0;rf(2)],[0;rf(3)],'-ro','LineWidth',3,'MarkerIndices',2)
+%plot3([0;h(1)],[0;h(2)],[0;h(3)],'-co','LineWidth',3,'MarkerIndices',2)
+%plot3([0;pe(1)],[0;pe(2)],[0;pe(3)],'-bo','LineWidth',3,'MarkerIndices',2)
+%plot3([0;NA(1)],[0;NA(2)],[0;NA(3)],'-mo','LineWidth',3,'MarkerIndices',2)
+%plot3([0;1],[0;0],[0;0],'-o','LineWidth',3,'MarkerIndices',2)
+%plot3([0;NAC],[0;0],[0;0],'-o','LineWidth',3,'MarkerIndices',2)
 
 
 thi=acos(dot(NA,ri)/(norm(NA)*norm(ri)));
@@ -434,8 +435,8 @@ for om=0:0.1:2*pi
     thprovvi=thi-om;
     thprovvf=thf-om;
 
-    A=[ 1 -norm(ri)*cos(thprovvi); 1 -norm(rf)*cos(thprovvf)];
-    b=[norm(ri);norm(rf)];
+    A2=[ 1 -norm(ri)*cos(thprovvi); 1 -norm(rf)*cos(thprovvf)];
+    b2=[norm(ri);norm(rf)];
 
     x=A\b;
 

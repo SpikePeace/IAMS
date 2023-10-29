@@ -1,4 +1,4 @@
-function [dx] = LTOT_Dynamics_Internal(x,u,p,t,vdat)
+function [dx, g_neq] = LTOT_Dynamics_Internal(x,u,p,t,vdat)
 %Low Thrust Orbit Transfer Problem - Dynamics - Internal
 %
 % Syntax:  
@@ -45,15 +45,17 @@ u_x = u(:,1);
 u_y = u(:,2);
 u_z = u(:,3);
 
-r_norm = norm([rx ry rz]);
+r_norm = sqrt(rx.^2+ry.^2+rz.^2);
 
 % equations of motion 
 drx = vx;
 dry = vy;
 drz = vz;
-dvx = - mu / r_norm ^ 3 * rx +u_x;
-dvy = - mu / r_norm ^ 3 * ry +u_y;
-dvz = - mu / r_norm ^ 3 * rz +u_z;
+dvx = - mu ./ r_norm .^ 3 .* rx + u_x;
+dvy = - mu ./ r_norm .^ 3 .* ry + u_y;
+dvz = - mu ./ r_norm .^ 3 .* rz + u_z;
 
 % Return variables
 dx=[drx dry drz dvx dvy dvz];
+
+g_neq=[abs(rx) abs(ry) abs(rz)] ;

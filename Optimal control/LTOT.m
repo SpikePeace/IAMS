@@ -1,4 +1,4 @@
-function [problem,guess] = LowThrustOrbitTransfer
+function [problem,guess] = LTOT
 %LowThrustOrbitTransfer - Low Thrust Orbit Transfer Problem
 %
 % The problem was adapted from Example 6.3 from
@@ -133,9 +133,9 @@ problem.setpoints.inputs=[];
 problem.constraints.ng_eq=0;
 problem.constraints.gTol_eq=[];
 
-problem.constraints.gl=[];
-problem.constraints.gu=[];
-problem.constraints.gTol_neq=[];
+problem.constraints.gl=[7000 7000 7000];
+problem.constraints.gu=[inf inf inf];
+problem.constraints.gTol_neq=[10 10 10];
 
 % Bounds for boundary constraints bl =< b(x0,xf,u0,uf,p,t0,tf) =< bu
 problem.constraints.bl=[];
