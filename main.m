@@ -8,7 +8,7 @@ ri=[-7894.6436; -854.6173; 2641.2167]
 vi=[-0.3252; -6.7530; -1.1450];
 
 [orbit_i , th_i] = cart2kep(ri, vi);
-plotOrbit(orbit_i,th_i,2*pi,deg2rad(1),'--');
+plotOrbit(orbit_i,th_i,2*pi,deg2rad(1),'o--');
 hold on
 
 %% Punto finale
@@ -21,7 +21,10 @@ th_f=2.0450;
 
 orbit_f = orbit(af,ef,iF,OMf,omf);
 
-plotOrbit(orbit_f,th_f,2*pi,deg2rad(1),'--');
+[rf vf] = kep2cart(orbit_f,th_f);
+
+
+plotOrbit(orbit_f,th_f,2*pi,deg2rad(1),'o--');
 
 
 
@@ -143,11 +146,7 @@ plotOrbit(orbit_f,th_f,2*pi,deg2rad(1),'--');
 
 
 
-
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
 
 
 
@@ -208,15 +207,116 @@ plotOrbit(orbit_f,th_f,2*pi,deg2rad(1),'--');
     disp("DeltaV = " + dv_tot)
     disp("DeltaT = " + dt_tot)
 
-%% 
+%% Trasferimento diretto
+
+% Trovo piano contenente r_i , r_f , centro terra
+
+% Direzione piano
+
+orbit_plane_norm = cross (ri , rf) / norm ( cross( ri , rf ) );
+
+NA = cross ( [0 0 1] , orbit_plane_norm ) / norm (cross ( [0 0 1] , orbit_plane_norm )) ;
+ 
+OM = acos ( NA(1) ) ;
+
+inc = acos ( orbit_plane_norm(3) ) ;
+
+% Trovo th orbita iniziale e finale nel piano orbitale, rispetto all'asse
+% dei nodi
+
+th_i_AN = acos ( dot ( NA , ri ) / ( norm ( NA ) * norm ( ri ) ) ) ;
+th_f_AN = 2*pi - acos ( dot ( NA , rf ) / ( norm ( NA ) * norm ( rf ) ) ) ;
+
+% Valuto orbite di trasferimento al variare di om
+
+om_vec = 0 : 0.1 : 2 * pi ;
+
+orbit_t=struct();
+
+for i = 1 : length( om_vec )
+    
+    % Calcolo th_i e th_f con l'om scelto
+    om = om_vec ( i ) ;
+
+    th_i = th_i_AN - om ;
+    th_f = th_f_AN - om ;
+    
+    % Ricavo p ed e dell'orbita 
+
+    A = [ 1 , -norm( ri )*cos( th_i ); 1 , -norm( rf )*cos( th_f ) ];
+    b = [ norm( ri ) ; norm( rf )];
+
+    x = A \ b;
+
+    p = x( 1 ) ;
+    e = x( 2 ) ;
+    
+    % Se e è accettabile procedo a valutare il trasferimento
+
+    if (e > 0) && ( e < 1 )
+        
+        % Costruisco l'orbita
+
+        orbit_t(end+1).e = e;
+        orbit_t(end).om = om;
+        orbit_t(end).th_i = th_i;
+        orbit_t(end).th_f = th_f;
+        orbit_t(end).a = p / (1 - e ^ 2);
+        orbit_t(end).inc = inc;
+        orbit_t(end).OM = OM;
+        orbit_t(end).a = p / ( 1 - orbit_t( end ).e ^ 2 );
+   
+        % Calcolo le velocità nei punti iniziali e finali sull'orbita di
+        % trasferimento
+   
+        [ ~ , v_t_1 ] = kep2cart( orbit_t(end) , orbit_t( end ).th_i ) ;
+        [ ~ , v_t_2 ] = kep2cart( orbit_t(end) , orbit_t( end ).th_f ) ;
+
+        % Trovo il deltaV come differenza vettoriale dei vettori velocità
+
+        orbit_t(end).dv1 = norm( v_t_1 - vi ) ;
+        orbit_t(end).dv2 = norm( vf - v_t_2 ) ;
+        
+        orbit_t( end ).dv_tot = orbit_t(end).dv1 + orbit_t(end).dv2 ;
+        orbit_t( end ).dt_tot = TOF ( orbit_t(end), orbit_t(end).th_i, orbit_t(end).th_f);
+    end
+end
 
 
+% Plot di eccentricità, deltaV, deltaT delle varie orbite possiibli
+
+figure
+plot([orbit_t(:).om],[orbit_t(:).e],'o')
+
+figure
+plot([orbit_t(:).om],[orbit_t(:).dv_tot],'o')
+
+figure
+plot([orbit_t(:).om],[orbit_t(:).dt_tot],'o')
+
+% Trovo l'orbita ottimale in termini di dV
+
+[~, j] = min ([orbit_t(:).dv_tot]);
+
+transfer_orbit_dv = orbit_t(j);
+
+figure(1)
+plotOrbit(transfer_orbit_dv,transfer_orbit_dv.th_i,transfer_orbit_dv.th_f-transfer_orbit_dv.th_i,deg2rad(1));
+
+disp("DeltaV = " + transfer_orbit_dv.dv_tot)
+disp("DeltaT = " + transfer_orbit_dv.dt_tot)
+
+% Trovo l'orbita ottimale in termini di dT
+
+[~, l] = min ([orbit_t(:).dt_tot]);
+
+transfer_orbit_dt = orbit_t(l);
 
 
+plotOrbit(transfer_orbit_dt,transfer_orbit_dt.th_i,transfer_orbit_dt.th_f-transfer_orbit_dt.th_i,deg2rad(1));
 
-
-
-
+disp("DeltaV = " + transfer_orbit_dt.dv_tot)
+disp("DeltaT = " + transfer_orbit_dt.dt_tot)
 
 
 

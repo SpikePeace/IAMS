@@ -2,7 +2,7 @@ function [r,v] = kep2cart(orbit , th, mu)
 % kep2car.m - Conversion from Keplerian elements to Cartesian coordinates
 %
 % PROTOTYPE:
-% [r, v] = kep2car(a, e, i, OM, om, th, mu)
+% [r, v] = kep2car(orbit , th, mu)
 %
 % DESCRIPTION:
 % Conversion from Keplerian elements to Cartesian coordinates. Angles in
