@@ -37,35 +37,23 @@ if nargin == 1
     return
 end
 
-% Eccentric anomaly sine
-sinEi = ( sqrt( 1 - e ^ 2 ) * sin ( thi ) ) / ( 1 + e * cos ( thi )) ;
-sinEf = ( sqrt( 1 - e ^ 2 ) * sin ( thf ) ) / ( 1 + e * cos ( thf )) ;
-cosEi = ( e + cos(thi)) / (1 + e * cos(thi));
-cosEf = ( e + cos(thf)) / (1 + e * cos(thf));
+% Eccentric anomaly 
+Ei = 2 * atan ( sqrt ( ( 1 - e ^ 2 ) / ( 1 + e ^ 2) ) * tan ( thi / 2) ) ;
+Ef = 2 * atan ( sqrt ( ( 1 - e ^ 2 ) / ( 1 + e ^ 2) ) * tan ( thf / 2) ) ;
 
-% Eccentric anomaly
-Ei = atan2 ( sinEi, cosEi) ;
-Ef = atan2 ( sinEf, cosEf) ;
+% If eccentric anomaly is negative , add 2*pi
+
+if Ef < Ei
+    Ef = Ef + 2*pi;
+end
 
 % Kepler equation
-dM = Ef - Ei - e * ( sinEf - sinEi ) ;
+dM = Ef - Ei - e * ( sin( Ef ) - sin ( Ei ) ) ;
 
 if thf >= thi
     dt = dM / n ; 
-
-    % condition to compensate for atan range -90 90
-    
-    if thf > pi && thf < 2*pi
-        dt = dt + floor ( ( ( thf - pi ) / ( 2 * pi ) ) + 1 ) * 2 * pi / n ;
-    end
 else 
     dt = - dM / n   + 2 * pi / n ;
-
-    % condition to compensate for atan range -90 90
-
-    if thi > pi 
-        dt = dt  + floor ( ( ( thi - pi ) / ( 2 * pi ) ) + 1 ) * 2 * pi / n ;
-    end
 end
 
 end
