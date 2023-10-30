@@ -306,19 +306,6 @@ plotOrbit(transfer_orbit_dv,transfer_orbit_dv.th_i,transfer_orbit_dv.th_f-transf
 disp("DeltaV = " + transfer_orbit_dv.dv_tot)
 disp("DeltaT = " + transfer_orbit_dv.dt_tot)
 
-% Trovo l'orbita ottimale in termini di dT
-
-[~, l] = min ([orbit_t(:).dt_tot]);
-
-transfer_orbit_dt = orbit_t(l);
-
-
-plotOrbit(transfer_orbit_dt,transfer_orbit_dt.th_i,transfer_orbit_dt.th_f-transfer_orbit_dt.th_i,deg2rad(1));
-
-disp("DeltaV = " + transfer_orbit_dt.dv_tot)
-disp("DeltaT = " + transfer_orbit_dt.dt_tot)
-
-
 
 
 
