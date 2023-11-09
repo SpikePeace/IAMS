@@ -58,4 +58,4 @@ dvz = - mu ./ r_norm .^ 3 .* rz + u_z;
 % Return variables
 dx=[drx dry drz dvx dvy dvz];
 
-g_neq=[abs(rx) abs(ry) abs(rz)] ;
+g_neq=[] ;

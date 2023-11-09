@@ -307,6 +307,58 @@ disp("DeltaV = " + transfer_orbit_dv.dv_tot)
 disp("DeltaT = " + transfer_orbit_dv.dt_tot)
 
 
+%% Trasferimento pazzo
+
+p_1 = orbit_i.a * ( 1 - orbit_i.e ^ 2 ) ;
+p_2 = orbit_f.a * ( 1 - orbit_f.e ^ 2 ) ;
+a1 = orbit_i.a;
+a2 = orbit_f.a;
+e1 = orbit_i.e;
+e2 = orbit_f.e;
+
+
+
+fun = @(x) [p_1 / ( 1 + e1 * cos( x(1) ) ) - p_2 / ( 1 + e2 * cos ( x(2) ) ) ; e1 * sin( x(1) ) / ( 1 + e1 * cos ( x(1) ) ) - e2 * sin( x(2) ) / ( 1 + e2 * cos ( x(2) ) ) ] ;
+sol=fsolve(fun, [2 ; 1] )
+
+orbit_t = orbit_f;
+orbit_t.om = orbit_i.om + sol(1) - sol(2) ;
+orbit_t.inc = orbit_i.inc;
+orbit_t.OM = orbit_i.OM;
+
+[deltaV, orbit_f, th] = changeOrbitalPlane ( orbit_t , orbit_f, 'n') ;
+
+plotOrbit(orbit_t, th, 2*pi , deg2rad(1),'o-')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
