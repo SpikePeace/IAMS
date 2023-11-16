@@ -11,6 +11,7 @@ vi=[-0.3252; -6.7530; -1.1450];
 plotOrbit(orbit_i,th_i,2*pi,deg2rad(1),'o--');
 hold on
 
+
 %% Punto finale
 af=13490.0000;
 ef=0.3593;
@@ -26,7 +27,11 @@ orbit_f = orbit(af,ef,iF,OMf,omf);
 
 plotOrbit(orbit_f,th_f,2*pi,deg2rad(1),'o--');
 
-
+title("Orbits characterization")
+legend("Initial Orbit", "Final Orbit")
+xlabel("X coordinate (Km)")
+ylabel("Y coordinate (Km)")
+zlabel("Z coordinate (Km)")
 
 %%
 %%
@@ -85,7 +90,7 @@ plotOrbit(orbit_f,th_f,2*pi,deg2rad(1),'o--');
 
 
 
-%A) apogeo-perigeo
+%AP) apogeo-perigeo
     %1)portare all'apogeo
     
     dt1p = TOF(orbit_i, th_i, pi) ;
@@ -105,7 +110,6 @@ plotOrbit(orbit_f,th_f,2*pi,deg2rad(1),'o--');
 
 
     %3) Cambio piano
-   
     
     [dv2, orbit_2, th_2] = changeOrbitalPlane(orbit_1, orbit_f,'o');
     
@@ -123,7 +127,7 @@ plotOrbit(orbit_f,th_f,2*pi,deg2rad(1),'o--');
         th_31 = th_31(2);
         th_32 = th_32(2);
 
-    dt3 = TOF (orbit_2, th_31, 2*pi) ;
+    dt3 = TOF (orbit_2, th_2, th_31);
 
     plotOrbit (orbit_2, th_2, th_31-th_2, deg2rad(0.5)) ;
 
@@ -136,7 +140,7 @@ plotOrbit(orbit_f,th_f,2*pi,deg2rad(1),'o--');
     
     % Calcoli finali 
 
-    dv_tot = dv1_1 + dv1_2 + dv1_2 + dv2 + dv3 ;
+    dv_tot = dv1_1 + dv1_2 + dv2 + dv3 ;
     dt_tot = dt1p + dt1 + dt2 + dt3 + dt4 ;
     
     
@@ -151,7 +155,7 @@ plotOrbit(orbit_f,th_f,2*pi,deg2rad(1),'o--');
 
 
 
-%B) perigeo-apogeo
+%PA) perigeo-apogeo
     %1)portare al perigeo
     
     dt1p = TOF(orbit_i, th_i, 2*pi) ;
@@ -200,7 +204,7 @@ plotOrbit(orbit_f,th_f,2*pi,deg2rad(1),'o--');
     
     % Calcoli finali 
 
-    dv_tot = dv1_2 + dv1_2 + dv2 + dv3 ;
+    dv_tot = dv1_1 + dv1_2 + dv2 + dv3 ;
     dt_tot = dt1p + dt1 + dt2 + dt3 + dt4 ;
     
     
@@ -307,28 +311,6 @@ disp("DeltaV = " + transfer_orbit_dv.dv_tot)
 disp("DeltaT = " + transfer_orbit_dv.dt_tot)
 
 
-%% Trasferimento pazzo
-
-p_1 = orbit_i.a * ( 1 - orbit_i.e ^ 2 ) ;
-p_2 = orbit_f.a * ( 1 - orbit_f.e ^ 2 ) ;
-a1 = orbit_i.a;
-a2 = orbit_f.a;
-e1 = orbit_i.e;
-e2 = orbit_f.e;
-
-
-
-fun = @(x) [p_1 / ( 1 + e1 * cos( x(1) ) ) - p_2 / ( 1 + e2 * cos ( x(2) ) ) ; e1 * sin( x(1) ) / ( 1 + e1 * cos ( x(1) ) ) - e2 * sin( x(2) ) / ( 1 + e2 * cos ( x(2) ) ) ] ;
-sol=fsolve(fun, [2 ; 1] )
-
-orbit_t = orbit_f;
-orbit_t.om = orbit_i.om + sol(1) - sol(2) ;
-orbit_t.inc = orbit_i.inc;
-orbit_t.OM = orbit_i.OM;
-
-[deltaV, orbit_f, th] = changeOrbitalPlane ( orbit_t , orbit_f, 'n') ;
-
-plotOrbit(orbit_t, th, 2*pi , deg2rad(1),'o-')
 
 
 
