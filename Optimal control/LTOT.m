@@ -78,9 +78,9 @@ problem.time.t0_max=0;
 guess.t0=0;
 
 % Final time. Let tf_min=tf_max if tf is fixed.
-problem.time.tf_min=50000;     
-problem.time.tf_max=100000; 
-guess.tf=90000;
+problem.time.tf_min=14950;     
+problem.time.tf_max=20000; 
+guess.tf=18000;
 
 % Parameters bounds. pl=< p <=pu
 problem.parameters.pl=[];
@@ -147,7 +147,7 @@ problem.constraints.bTol=[];
 problem.data.mu = 398600.433;
 
 % Obtain guess of states and input sequences with ode solve
-guess.time = [0 50000];
+guess.time = [0 18000];
 guess.states(:,1)=[ri(1) rf(1)];
 guess.states(:,2)=[ri(2) rf(2)];
 guess.states(:,3)=[ri(3) rf(3)];
