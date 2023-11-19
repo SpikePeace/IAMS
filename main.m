@@ -4,7 +4,7 @@ mu=398600.433;
 PlotEarth
 clear all
 %% Punto iniziale
-ri=[-7894.6436; -854.6173; 2641.2167]
+ri=[-7894.6436; -854.6173; 2641.2167];
 vi=[-0.3252; -6.7530; -1.1450];
 
 [orbit_i , th_i] = cart2kep(ri, vi);
