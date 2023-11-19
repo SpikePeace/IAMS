@@ -23,4 +23,4 @@ clear all;close all;format compact;
 % options= problem.settings(150);                  % h method
 options= problem.settings(100,4);                  % hp method
 [solution,MRHistory]=solveMyProblem( problem,guess,options);
-[ tv, xv, uv ] = simulateSolution( problem, solution, 'ode113', 0.1 );
+[ tv, xv, uv ] = simulateSolution( problem, solution, 'ode113', 0.01 );
