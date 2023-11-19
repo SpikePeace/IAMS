@@ -26,16 +26,13 @@ erot    = 7.2921158553e-5; % earth rotation rate (radians/sec)
 
 %% Create figure
 
-figure('Color', [1 1 1]);
+figure();
 
 hold on;
 
-% Turn off the normal axes
-
-set(gca, 'NextPlot','add', 'Visible','off');
-
 axis equal;
 axis auto;
+grid on
 
 % Set initial view
 

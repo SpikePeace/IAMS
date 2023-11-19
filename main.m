@@ -291,12 +291,22 @@ end
 
 figure
 plot([orbit_t(:).om],[orbit_t(:).e],'o')
+title("Eccentricity variation with different ω")
+xlabel("ω");
+ylabel("e");
+
 
 figure
 plot([orbit_t(:).om],[orbit_t(:).dv_tot],'o')
+title("Δv variation with different ω")
+xlabel("ω");
+ylabel("Δv");
 
 figure
 plot([orbit_t(:).om],[orbit_t(:).dt_tot],'o')
+title("Δt variation with different ω")
+xlabel("ω");
+ylabel("Δt");
 
 % Trovo l'orbita ottimale in termini di dV
 
