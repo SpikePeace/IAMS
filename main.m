@@ -58,23 +58,23 @@ zlabel("Z coordinate (Km)")
 
     plotOrbit(orbit_1, th_1, th_21-th_1,deg2rad(0.5));
 
-    %2.b) arrivo a apogeo sull'orbita 2
+    %2.b) arrivo a perigeo sull'orbita 2
     
-    plotOrbit(orbit_2, th_22, pi-th_22, deg2rad(0.5));
+    plotOrbit(orbit_2, th_22, 2*pi-th_22, deg2rad(0.5));
 
-    dt2p = TOF(orbit_2, th_22, pi);
+    dt2p = TOF(orbit_2, th_22, 2*pi);
     
-    %3)manovra bitangente apogeo (orbita 2) - perigeo (orbita finale)
+    %3)manovra bitangente perigeo (orbita 2) - apogeo (orbita finale)
 
-    [dv3_1,dv3_2,dt3,orbit_t] = bitangentTransfer(orbit_2,orbit_f,'ap');
+    [dv3_1,dv3_2,dt3,orbit_t] = bitangentTransfer(orbit_2,orbit_f,'pa');
 
-    plotOrbit(orbit_t,pi,pi,deg2rad(0.5));
+    plotOrbit(orbit_t,0,pi,deg2rad(0.5));
 
     %3.b) arrivo a punto finale
     
-    dt3p = TOF(orbit_f,0,th_f);
+    dt3p = TOF(orbit_f,pi,pi+th_f);
 
-    plotOrbit(orbit_f,0,th_f,deg2rad(0.5));
+    plotOrbit(orbit_f,pi,pi+th_f,deg2rad(0.5));
 
     % Calcoli finali
 

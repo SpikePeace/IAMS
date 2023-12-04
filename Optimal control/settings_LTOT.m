@@ -1,32 +1,5 @@
 function options = settings_LowThrustOrbitTransfer(varargin)
 
-%SETTINGS - General and solver-specific settings are selected here
-% Unless specified otherwise the options are set using 0 => no and 1 => yes
-%
-% Syntax:  options = settings(varargin)
-%          When giving one input with varargin, e.g. with settings(20), will use h-method of your choice with N=20 nodes
-%          When giving two inputs with varargin, hp-LGR method will be used with two possibilities
-%           - Scalar numbers can be used for equally spaced intervals with the same polynoimial orders. For example, settings_hp(5,4) means using 5 LGR intervals each of polynomial degree of 4. 
-%           - Alternatively, can supply two arrays in the argument with customized meshing. For example, settings_hp([-1 0.3 0.4 1],[4 5 3]) will have 3 segments on the normalized interval [-1 0.3], [0.3 0.4] and [0.4 1], with polynomial order of 4, 5, and 3 respectively.
-%      
-% Output:
-%    options - Structure containing the settings
-%
-% Other m-files required: none
-% Subfunctions: none
-% MAT-files required: none
-%
-% Copyright (C) 2019 Yuanbo Nie, Omar Faqir, and Eric Kerrigan. All Rights Reserved.
-% The contribution of Paola Falugi, Eric Kerrigan and Eugene van Wyk for the work on ICLOCS Version 1 (2010) is kindly acknowledged.
-% This code is published under the MIT License.
-% Department of Aeronautics and Department of Electrical and Electronic Engineering,
-% Imperial College London London  England, UK 
-% ICLOCS (Imperial College London Optimal Control) Version 2.5 
-% 1 Aug 2019
-% iclocs@imperial.ac.uk
-
-%------------- BEGIN CODE --------------
-
 
 %% Transcription Method
 
@@ -71,7 +44,7 @@ options.errortype='local_abs';
 % Global LGR method         ('globalLGR')
 % Local LGR method          ('hpLGR')
 % Automatic chosen direct collocation ('AutoDirect')
-options.discretization='hermite';
+options.discretization='trapezoidal';
 
 % Result Representation:
 %---------------------------------------
